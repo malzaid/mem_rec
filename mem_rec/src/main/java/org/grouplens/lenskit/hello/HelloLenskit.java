@@ -65,12 +65,17 @@ public class HelloLenskit implements Runnable {
             System.exit(1);
         }
     }
+    
+    
 
     private String delimiter = "\t";
-    private File inputFile = new File("data/ratings.csv");
-    private File movieFile = new File("data/movies.csv");
+    private File inputFile = new File("data/sampledata/ratings.csv");
+    private File movieFile = new File("data/sampledata/movies.csv");
     private List<Long> users;
 
+    
+    
+    
     public HelloLenskit(String[] args) {
         users = new ArrayList<Long>(args.length);
         for (String arg: args) {
