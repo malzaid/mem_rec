@@ -28,6 +28,7 @@ import org.lenskit.config.ConfigHelpers;
 import org.lenskit.data.dao.EventDAO;
 import org.lenskit.data.dao.ItemNameDAO;
 import org.lenskit.data.dao.MapItemNameDAO;
+import org.grouplens.lenskit.data.sql.JDBCRatingDAO;
 import org.grouplens.lenskit.data.text.Formats;
 import org.grouplens.lenskit.data.text.TextEventDAO;
 import org.grouplens.lenskit.transform.normalize.BaselineSubtractingUserVectorNormalizer;
@@ -43,6 +44,7 @@ import org.lenskit.knn.item.ItemItemScorer;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +54,11 @@ import java.util.List;
  *
  * Usage: java org.grouplens.lenskit.hello.HelloLenskit ratings.csv user
  */
-public class HelloLenskit implements Runnable {
+public class HstoreExample implements Runnable {
 	public static void main(String[] args) {
 		args[0] = "72";
 
-		HelloLenskit hello = new HelloLenskit(args);
+		HstoreExample hello = new HstoreExample(args);
 		try {
 			hello.run();
 		} catch (RuntimeException e) {
@@ -71,7 +73,7 @@ public class HelloLenskit implements Runnable {
 	private File movieFile = new File("data/sampledata/movies.csv");
 	private List<Long> users;
 
-	public HelloLenskit(String[] args) {
+	public HstoreExample(String[] args) {
 		users = new ArrayList<Long>(args.length);
 		for (String arg : args) {
 			users.add(Long.parseLong(arg));
@@ -83,6 +85,11 @@ public class HelloLenskit implements Runnable {
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
 		EventDAO dao = TextEventDAO.create(inputFile, Formats.movieLensLatest());
+		
+//		Connection cxn = /* open JDBC connection */;
+//		JDBCRatingDAO dao2 = new JDBCRatingDAO(cxn, new BasicStatementFactory());
+//		
+		
 		ItemNameDAO names;
 		try {
 			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
