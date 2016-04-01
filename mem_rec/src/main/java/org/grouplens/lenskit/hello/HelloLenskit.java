@@ -28,6 +28,7 @@ import org.lenskit.config.ConfigHelpers;
 import org.lenskit.data.dao.EventDAO;
 import org.lenskit.data.dao.ItemNameDAO;
 import org.lenskit.data.dao.MapItemNameDAO;
+import org.grouplens.lenskit.data.sql.JDBCRatingDAO;
 import org.grouplens.lenskit.data.text.Formats;
 import org.grouplens.lenskit.data.text.TextEventDAO;
 import org.grouplens.lenskit.transform.normalize.BaselineSubtractingUserVectorNormalizer;
@@ -43,9 +44,12 @@ import org.lenskit.knn.item.ItemItemScorer;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 /**
  * Demonstration app for LensKit. This application builds an item-item CF model
  * from a CSV file, then generates recommendations for a user.
@@ -53,16 +57,27 @@ import java.util.List;
  * Usage: java org.grouplens.lenskit.hello.HelloLenskit ratings.csv user
  */
 public class HelloLenskit implements Runnable {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		args[0] = "72";
-
+		
 		HelloLenskit hello = new HelloLenskit(args);
+		
+		
+		cxn = DriverManager
+	            .getConnection("jdbc:postgresql://en4102945l.cidse.dhcp.asu.edu:5432/data_mnist",
+	            "postgres", "12akil");
+		
 		try {
+			
 			hello.run();
+			
 		} catch (RuntimeException e) {
+			cxn.close();
 			System.err.println(e.toString());
 			e.printStackTrace(System.err);
 			System.exit(1);
+		} finally {
+			cxn.close();
 		}
 	}
 
@@ -70,7 +85,8 @@ public class HelloLenskit implements Runnable {
 	private File inputFile = new File("data/sampledata/ratings.csv");
 	private File movieFile = new File("data/sampledata/movies.csv");
 	private List<Long> users;
-
+	private static Connection cxn;
+	
 	public HelloLenskit(String[] args) {
 		users = new ArrayList<Long>(args.length);
 		for (String arg : args) {
@@ -82,7 +98,11 @@ public class HelloLenskit implements Runnable {
 		// We first need to configure the data access.
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
-		EventDAO dao = TextEventDAO.create(inputFile, Formats.movieLensLatest());
+		
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+		
+//		EventDAO dao = TextEventDAO.create(inputFile, Formats.movieLensLatest());
+		
 		ItemNameDAO names;
 		try {
 			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
@@ -146,4 +166,6 @@ public class HelloLenskit implements Runnable {
 			}
 		}
 	}
+
+	
 }
