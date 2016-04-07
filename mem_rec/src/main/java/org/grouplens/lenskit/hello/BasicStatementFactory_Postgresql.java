@@ -12,8 +12,8 @@ public class BasicStatementFactory_Postgresql extends BasicSQLStatementFactory {
             LoggerFactory.getLogger(BasicSQLStatementFactory.class);
 	
 	private String tableName = "ratings";
-	private String userColumn = "user_id";
-	private String itemColumn = "movie_id";
+	private String userColumn = "userid";
+	private String itemColumn = "movieid";
 	private String ratingColumn = "rating";
 	
 	private String timestampColumn = "timestamp";
