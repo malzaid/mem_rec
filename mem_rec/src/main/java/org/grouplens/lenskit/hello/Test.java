@@ -2,6 +2,7 @@ package org.grouplens.lenskit.hello;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Test {
@@ -17,16 +18,18 @@ public class Test {
 	            "postgres", "12akil");
 	         
 	         System.out.println("Opened database successfully");
+	         c.setAutoCommit(false);
+	         System.out.println("Opened database successfully");
+
 	         stmt = c.createStatement();
 	         
-	         
-	         String sql = "CREATE TABLE COMPANY " +
-	                      "(ID INT PRIMARY KEY     NOT NULL," +
-	                      " NAME           TEXT    NOT NULL, " +
-	                      " AGE            INT     NOT NULL, " +
-	                      " ADDRESS        CHAR(50), " +
-	                      " SALARY         REAL)";
-	         stmt.executeUpdate(sql);
+	         ResultSet rs = stmt.executeQuery( "SELECT * FROM ratings" );
+	         while ( rs.next() ) {
+	            String id = rs.getString("user_id");
+	            System.out.println( "ID = " + id );
+	            System.out.println();
+	         }
+	         rs.close();
 	         stmt.close();
 	         c.close();
 	         
