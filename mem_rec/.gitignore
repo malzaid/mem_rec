@@ -5,6 +5,5 @@
 *.iml
 /ml-100k
 .classpath
-.gitignore
 .project
-.settings/*
+.settings/gradle.prefs
