@@ -1,7 +1,10 @@
-/.gradle
 /build
 /target
 /.idea
 /.idea_modules
 *.iml
 /ml-100k
+.classpath
+.gitignore
+.project
+.settings/*
