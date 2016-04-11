@@ -1,90 +1,171 @@
-/*---------------------------------------------------------------------------
-// AUTHOR:          (Put your name here)
-// FILENAME:        Lab7.java
-// SPECIFICATION:   This program creates objects of the Rectangle class and calculates the area
-//					and perimeter of the rectangle. Complete coding the Rectangle class first.
-// INSTRUCTIONS:    Read the following code skeleton and add your own code
-//                  according to the comments.  Ask your TA or your class-
-//                  mates for help and/or clarification.  When you see
-//                  //--> that is where you need to add code.
-//-------------------------------------------------------------------------*/
+/*
+ * Copyright 2011 University of Minnesota
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.grouplens.lenskit.hello;
 
-//Create a class Lab7 with a main method
-public class Lab7{
+import org.lenskit.LenskitRecommenderEngine;
+import org.lenskit.api.RecommenderBuildException;
+import org.lenskit.LenskitConfiguration;
+import org.lenskit.config.ConfigHelpers;
+import org.lenskit.data.dao.EventDAO;
+import org.lenskit.data.dao.ItemNameDAO;
+import org.lenskit.data.dao.MapItemNameDAO;
+import org.grouplens.lenskit.data.sql.JDBCRatingDAO;
+import org.grouplens.lenskit.data.text.Formats;
+import org.grouplens.lenskit.data.text.TextEventDAO;
+import org.grouplens.lenskit.transform.normalize.BaselineSubtractingUserVectorNormalizer;
+import org.grouplens.lenskit.transform.normalize.UserVectorNormalizer;
+import org.lenskit.LenskitRecommender;
+import org.lenskit.api.*;
+import org.lenskit.baseline.BaselineScorer;
+import org.lenskit.baseline.ItemMeanRatingItemScorer;
+import org.lenskit.baseline.UserMeanBaseline;
+import org.lenskit.baseline.UserMeanItemScorer;
+import org.lenskit.knn.MinNeighbors;
+import org.lenskit.knn.item.ItemItemScorer;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-	public static void main(String[] args) {
-
-		//Create two Rectangle objects
-		//r1 with length 10 and width 4
-		//r2 with length 6 and width 6
-		Rectangle r1 = new Rectangle(10, 4);
-		Rectangle r2 = new Rectangle(6, 6);
-
-		//Print the details of the rectangles with their respective toString() methods
-		System.out.println("The two rectangles are");
-		System.out.println("r1 "+r1.toString());
-		System.out.println("r2 "+r2.toString());
-
-		//Check if either of the rectangles is a square using the isSquare() method
-		//and print the rectangle's details telling it is a square.
-		if(r1.isSquare()){
-			System.out.println(r1.toString()+ " is a square");
+import java.sql.Connection;
+import java.sql.DriverManager;
+/**
+ * Demonstration app for LensKit. This application builds an item-item CF model
+ * from a CSV file, then generates recommendations for a user.
+ *
+ * Usage: java org.grouplens.lenskit.hello.HelloLenskit ratings.csv user
+ */
+public class HelloLenskit implements Runnable {
+	public static void main(String[] args) throws SQLException {
+		args[0] = "72";
+		
+		HelloLenskit hello = new HelloLenskit(args);
+		
+		
+		cxn = DriverManager
+	            .getConnection("jdbc:postgresql://en4102945l.cidse.dhcp.asu.edu:5432/data_mnist",
+	            "postgres", "12akil");
+		
+		try {
+			
+			hello.run();
+			
+		} catch (RuntimeException e) {
+			cxn.close();
+			System.err.println(e.toString());
+			e.printStackTrace(System.err);
+			System.exit(1);
+		} finally {
+			cxn.close();
 		}
-		if(r2.isSquare()){
-			System.out.println(r2.toString() + " is a square");
-		}
-
-		//Calculate the area of the rectangles using the area() method
-		//and print it along with the details of the rectangle
-		//For example:
-		//"The area of <rectangle details> is <rectangle area> square units"
-		//Use the toString() method to get the rectangle details and the area() method to get the area
-		System.out.println("The area of "+ r1.toString() + " is "+ r1.area()+ " square units");
-		System.out.println("The area of "+ r2.toString() + " is "+ r2.area()+ " square units");
-
-		//Calculate the perimeter of the rectangles using the perimeter() method
-		//and print it along with the details of the rectangle
-		//For example:
-		//"The perimeter of <rectangle details> is <rectangle perimeter> units"
-		//Use the toString() method to get the rectangle details and the perimeter() method to get the area
-		System.out.println("The perimeter of "+ r1.toString() + " is "+ r1.perimeter()+ " units");
-		System.out.println("The perimeter of "+ r2.toString() + " is "+ r2.perimeter()+ " units");
-
-		//Print "Changing the width of rectangle (r1) to 9" and change it using the setWidth(int) method
-		System.out.println("Changing the width of rectangle (r1) to 9");
-		r1.setWidth(9);
-		//Print "Changing the length of rectangle (r2) to 15" and change it using the setLength(int) method
-		System.out.println("Changing the length of rectangle (r2) to 15");
-		r2.setLength(15);
-
-		//Print the details of the new rectangles using the toString() methods.
-		System.out.println("The new rectangles are: \nr1 "+r1.toString()+"\nr2 "+r2.toString());
-
-		//Check if the areas of the rectangles are equal or not and print the information
-		//if areas are equal then print
-		//		'The rectangles are of equal area, <area of r1> square units'
-		//if they are not equal then print
-		//		'The areas of the rectangles are not equal.'
-		//		'r1 has area = <area of r1> square units and r2 has area = <area of r2> square units.
-		if(r1.area()==r2.area()){
-			System.out.println("The rectangles are of equal area, " + r1.area()+ " square units");
-		}
-		else{
-			System.out.println("The areas of the rectangles are not equal.");
-			System.out.println("r1 has area = "+r1.area()+" square units and r2 has area = "+ r2.area()+" square units.");
-		}
-
-		//Check if the perimeters of the rectangles are equal or not and print the information
-		//Use the same format as done while checking for area above
-		if(r1.perimeter()==r2.perimeter()){
-			System.out.println("The rectangles are of equal perimeter, " + r1.perimeter()+ " units");
-		}
-		else{
-			System.out.println("The perimeters of the rectangles are not equal.");
-			System.out.println("r1 has perimeter = "+r1.perimeter()+" units and r2 has perimeter = "+ r2.perimeter()+" units.");
-		}
-
 	}
 
+	private String delimiter = "\t";
+	private File inputFile = new File("data/sampledata/ratings.csv");
+	private File movieFile = new File("data/sampledata/movies.csv");
+	private List<Long> users;
+	private static Connection cxn;
+	
+	public HelloLenskit(String[] args) {
+		users = new ArrayList<Long>(args.length);
+		for (String arg : args) {
+			users.add(Long.parseLong(arg));
+		}
+	}
+
+	public void run() {
+		// We first need to configure the data access.
+		// We will use a simple delimited file; you can use something else like
+		// a database (see JDBCRatingDAO).
+		
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+		
+//		EventDAO dao = TextEventDAO.create(inputFile, Formats.movieLensLatest());
+		
+		ItemNameDAO names;
+		try {
+			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
+		} catch (IOException e) {
+			throw new RuntimeException("cannot load names", e);
+		}
+
+		// Next: load the LensKit algorithm configuration
+		LenskitConfiguration config = null;
+		try {
+			config = ConfigHelpers.load(new File("etc/item-item.groovy"));
+		} catch (IOException e) {
+			throw new RuntimeException("could not load configuration", e);
+		}
+		// Add our data component to the configuration
+		config.addComponent(dao);
+
+		/*
+		 * 
+		 * LenskitConfiguration config = new LenskitConfiguration();
+		 * config.addComponent(dao); // Use item-item CF to score items
+		 * config.bind(ItemScorer.class) .to(ItemItemScorer.class); // let's use
+		 * personalized mean rating as the baseline/fallback predictor. //
+		 * 2-step process: // First, use the user mean rating as the baseline
+		 * scorer config.bind(BaselineScorer.class, ItemScorer.class)
+		 * .to(UserMeanItemScorer.class); // Second, use the item mean rating as
+		 * the base for user means config.bind(UserMeanBaseline.class,
+		 * ItemScorer.class) .to(ItemMeanRatingItemScorer.class); // and
+		 * normalize ratings by baseline prior to computing similarities
+		 * config.bind(UserVectorNormalizer.class)
+		 * .to(BaselineSubtractingUserVectorNormalizer.class);
+		 * config.bind(MinNeighbors.class);
+		 */
+
+		// There are more parameters, roles, and components that can be set. See
+		// the
+		// JavaDoc for each recommender algorithm for more information.
+
+		// Now that we have a configuration, build a recommender engine from the
+		// configuration
+		// and data source. This will compute the similarity matrix and return a
+		// recommender
+		// engine that uses it.
+		LenskitRecommenderEngine engine = LenskitRecommenderEngine.build(config);
+
+		// Finally, get the recommender and use it.
+		try (LenskitRecommender rec = engine.createRecommender()) {
+			// we want to recommend items
+			ItemRecommender irec = rec.getItemRecommender();
+			assert irec != null; // not null because we configured one
+
+			// for users
+			for (long user : users) {
+				// get 10 recommendation for the user
+				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
+				System.out.format("Recommendations for user %d:\n", user);
+				for (Result item : recs) {
+					String name = names.getItemName(item.getId());
+					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
+				}
+			}
+		}
+	}
+
+	
 }
