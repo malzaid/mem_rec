@@ -1,14 +1,14 @@
 import org.voltdb.*;
 
-public class PrepareItemEvents extends VoltProcedure {
-
-  public final SQLStmt getMovieID = new SQLStmt(
-		  "SELECT userid, movieid, rating, timestamp FROM ratings WHERE movieid = ?" );
+public class PrepareItemUsers extends VoltProcedure {
+	prepareItemUsers
+  public final SQLStmt getItemUsers = new SQLStmt(
+		  "SELECT DISTINCT userid FROM ratings WHERE movieid = ?" );
 
   public VoltTable[] run(int movieid)
       throws VoltAbortException {
 
-          voltQueueSQL( getMovieID, movieid );
+          voltQueueSQL( getItemUsers, movieid );
           return voltExecuteSQL();
 
       }
