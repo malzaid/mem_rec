@@ -66,9 +66,7 @@ public class HelloLenskit implements Runnable {
 		cxn = ConnectionManager.getConnectionVoltDB();
 		
 		try {
-			
 			hello.run();
-			
 		} catch (RuntimeException e) {
 			cxn.close();
 			System.err.println(e.toString());
@@ -78,7 +76,7 @@ public class HelloLenskit implements Runnable {
 			cxn.close();
 		}
 	}
-
+	
 	private String delimiter = "\t";
 	private File inputFile = new File("data/sampledata/ratings.csv");
 	private File movieFile = new File("data/sampledata/movies.csv");

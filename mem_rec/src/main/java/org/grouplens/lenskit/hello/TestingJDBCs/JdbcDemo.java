@@ -1,4 +1,4 @@
-package org.grouplens.lenskit.hello;
+package org.grouplens.lenskit.hello.TestingJDBCs;
 
 import java.sql.*;
 import java.io.*;
