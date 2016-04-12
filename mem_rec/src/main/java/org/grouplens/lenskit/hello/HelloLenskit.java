@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 /**
  * Demonstration app for LensKit. This application builds an item-item CF model
  * from a CSV file, then generates recommendations for a user.
@@ -63,10 +62,8 @@ public class HelloLenskit implements Runnable {
 		HelloLenskit hello = new HelloLenskit(args);
 		
 		// postgres connections 
-		cxn = DriverManager
-	            .getConnection("jdbc:postgresql://en4102945l.cidse.dhcp.asu.edu:5432/data_mnist",
-	            "postgres", "12akil");
-		
+//		cxn = ConnectionManager.getConnectionPostGresql();
+		cxn = ConnectionManager.getConnectionVoltDB();
 		
 		try {
 			
