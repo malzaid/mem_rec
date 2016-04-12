@@ -1,0 +1,7 @@
+CSVLoader elaspsed: 0.654 seconds
+Number of input lines skipped: 0
+Number of lines read from input: 8927
+Number of rows discovered: 8927
+Number of rows successfully inserted: 8927
+Number of rows that could not be inserted: 0
+CSVLoader rate: 13649.848 row/s
