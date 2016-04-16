@@ -8,3 +8,13 @@
 2016-04-11 17:38:06,031   INFO  [main] CSVLOADER: Invalid row file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_RATINGS_insert_invalidrows.csv
 2016-04-11 17:38:06,031   INFO  [main] CSVLOADER: Log file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_RATINGS_insert_log.log
 2016-04-11 17:38:06,031   INFO  [main] CSVLOADER: Report file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_RATINGS_insert_report.log
+2016-04-15 19:55:18,123   INFO  [main] CSVLOADER: Read 8927 rows from file and successfully inserted 8927 rows (final)
+2016-04-15 19:55:18,124   INFO  [main] CSVLOADER: Elapsed time: 0.558 seconds
+2016-04-15 19:55:18,124   INFO  [main] CSVLOADER: Invalid row file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_MOVIES_insert_invalidrows.csv
+2016-04-15 19:55:18,124   INFO  [main] CSVLOADER: Log file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_MOVIES_insert_log.log
+2016-04-15 19:55:18,124   INFO  [main] CSVLOADER: Report file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_MOVIES_insert_report.log
+2016-04-15 19:55:24,729   INFO  [main] CSVLOADER: Read 100234 rows from file and successfully inserted 100234 rows (final)
+2016-04-15 19:55:24,730   INFO  [main] CSVLOADER: Elapsed time: 1.99 seconds
+2016-04-15 19:55:24,730   INFO  [main] CSVLOADER: Invalid row file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_RATINGS_insert_invalidrows.csv
+2016-04-15 19:55:24,730   INFO  [main] CSVLOADER: Log file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_RATINGS_insert_log.log
+2016-04-15 19:55:24,730   INFO  [main] CSVLOADER: Report file: /home/akamzin1/Desktop/mem_rec/mem_rec/libs/voltdb_setup_scripts/csvloader_RATINGS_insert_report.log
