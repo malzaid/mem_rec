@@ -33,14 +33,14 @@ END_OF_BATCH
 CREATE INDEX movies_idx ON movies (movieid);
 CREATE INDEX ratings_idx ON ratings (userid,movieid);
 
-LOAD CLASSES storedprocs.jar;
+-- LOAD CLASSES storedprocs.jar;
 
-
-CREATE PROCEDURE FROM CLASS PrepareUsers;
-CREATE PROCEDURE FROM CLASS PrepareItems;
-CREATE PROCEDURE FROM CLASS PrepareEvents;
-CREATE PROCEDURE FROM CLASS PrepareUserEvents;
-CREATE PROCEDURE FROM CLASS PrepareItemEvents;
-CREATE PROCEDURE FROM CLASS PrepareItemUsers;
+--
+-- CREATE PROCEDURE FROM CLASS PrepareUsers;
+-- CREATE PROCEDURE FROM CLASS PrepareItems;
+-- CREATE PROCEDURE FROM CLASS PrepareEvents;
+-- CREATE PROCEDURE FROM CLASS PrepareUserEvents;
+-- CREATE PROCEDURE FROM CLASS PrepareItemEvents;
+-- CREATE PROCEDURE FROM CLASS PrepareItemUsers;
 
 
