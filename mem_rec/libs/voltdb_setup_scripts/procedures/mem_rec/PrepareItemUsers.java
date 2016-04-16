@@ -1,5 +1,6 @@
 import org.voltdb.*;
 
+
 public class PrepareItemUsers extends VoltProcedure {
   public final SQLStmt getItemUsers = new SQLStmt(
 		  "SELECT DISTINCT userid FROM ratings WHERE movieid = ?" );

@@ -1,6 +1,13 @@
 #compile java stored procedures
-javac -cp "$CLASSPATH:/home/akamzin1/voltdb-ent-6.1/voltdb/*"   PrepareUsers.java
 
+rm procedures/mem_rec/*.class
+ 
+javac -cp "$CLASSPATH:/home/akamzin1/voltdb-ent-6.1/voltdb/*" procedures/mem_rec/*.java
+jar cvf storedprocs.jar procedures/mem_rec/*.class
+
+
+
+sqlcmd < ddl.sql
 
 csvloader --separator "," --file movies.csv movies
 csvloader --separator "," --file ratings.csv ratings
