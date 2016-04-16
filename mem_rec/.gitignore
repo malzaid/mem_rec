@@ -7,3 +7,4 @@
 .classpath
 .project
 .settings/gradle.prefs
+libs/voltdb_setup_scripts/voltdbroot/
