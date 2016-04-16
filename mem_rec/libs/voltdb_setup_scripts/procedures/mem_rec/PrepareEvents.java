@@ -1,6 +1,6 @@
 import org.voltdb.*;
 
-public class PrepEvents extends VoltProcedure {
+public class PrepareEvents extends VoltProcedure {
 
   public final SQLStmt getEvents = new SQLStmt(
 		  "SELECT DISTINCT movieid FROM ratings;" );
