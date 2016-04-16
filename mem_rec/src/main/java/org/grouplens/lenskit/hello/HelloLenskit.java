@@ -22,7 +22,6 @@
 package org.grouplens.lenskit.hello;
 
 import org.lenskit.LenskitRecommenderEngine;
-import org.lenskit.api.RecommenderBuildException;
 import org.lenskit.LenskitConfiguration;
 import org.lenskit.config.ConfigHelpers;
 import org.lenskit.data.dao.EventDAO;
@@ -59,16 +58,21 @@ import java.sql.Connection;
 
 public class HelloLenskit implements Runnable {
 	public static void main(String[] args) throws SQLException {
-	
-
 		HelloLenskit hello = new HelloLenskit(args);
-
 		// postgres connections
-		// cxn = ConnectionManager.getConnectionPostGresql();
 		cxn = ConnectionManager.getConnectionPostGresql();
+		//cxn = ConnectionManager.getConnectionVoltDB();
+
+		/* Fill up with User Id
+		args = new String[718];
+
+		for (int i = 0; i < arg.length; i++) {
+			args[i] = i + "";
+		}
+		*/
 
 		try {
-			hello.run();
+			hello.Experiments();
 		} catch (RuntimeException e) {
 			cxn.close();
 			System.err.println(e.toString());
@@ -172,6 +176,64 @@ public class HelloLenskit implements Runnable {
 				}
 			}
 		}
+	}
+	public void Experiments() {
+		// We first need to configure the data access.
+		
+		EventDAO dao = TextEventDAO.create(inputFile, Formats.movieLensLatest());
+
+		ItemNameDAO names;
+		try {
+			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
+		} catch (IOException e) {
+			throw new RuntimeException("cannot load names", e);
+		}
+
+
+		LenskitConfiguration config = new LenskitConfiguration();
+		config.addComponent(dao);
+		// Use item-item CF to score items
+		config.bind(ItemScorer.class).to(ItemItemScorer.class);
+		config.bind(BaselineScorer.class, ItemScorer.class).to(UserMeanItemScorer.class);
+		config.bind(UserMeanBaseline.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+		config.bind(UserVectorNormalizer.class).to(BaselineSubtractingUserVectorNormalizer.class);
+		config.bind(MinNeighbors.class);
+
+
+		LenskitRecommenderEngine engine = LenskitRecommenderEngine.build(config);
+
+		// Finally, get the recommender and use it.
+		try (LenskitRecommender rec = engine.createRecommender()) {
+			// we want to recommend items
+			ItemRecommender irec = rec.getItemRecommender();
+			assert irec != null; // not null because we configured one
+
+			double sum = 0;
+			// for users
+			for (long user : users) {
+				// get 10 recommendation for the user
+				long startTime = System.nanoTime();
+				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
+				System.out.format("Recommendations for user %d:\n", user);
+				for (Result item : recs) {
+					String name = names.getItemName(item.getId());
+					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
+
+				}
+				long endTime = System.nanoTime();
+
+				long duration = (endTime - startTime) / 1000000; 
+				sum+=duration;
+				System.out.println("--------------------------------------------");
+				System.out.println("User " + user + " recommendition generated in " + duration + " ms");
+				System.out.println("--------------------------------------------");
+			}
+			
+			System.out.println("--------------------------------------------");
+			System.out.println("Avg User time to recommendition generated in " + sum/users.size() + " ms");
+			System.out.println("--------------------------------------------");
+		}
+		
 	}
 
 }
