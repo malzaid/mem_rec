@@ -1,14 +1,11 @@
 Progress this week:
-We worked setting up recommender system framework Lenskit. We worked on setting up H-store, but 
-we run into problem with H-store documentation. It seem it does not cover basic inserts, selects.
-I think the system is created to run predifined benchmarks. Now we are trying to work on industrial 
-version of H-store VoltDB. We have also worked on creating connections plugins for Lenskit.
-For now, we have setup small dataset in Postgres and will try to get it working. So far it is connecting and 
-running basic item recommendation of postgres. 
-
-
-Plans for next week:
 We plan to design and run experiments. We will identify metrics that we will be using to evaluate 
 in-memory databases with recommender system. We will work on finding alternative in-memory systems 
 compatible with Lenskit. For now, we identified VoltDB. 
+
+
+
+
+Plans for next week:
+
 
