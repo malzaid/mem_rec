@@ -49,22 +49,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.sql.Connection;
+
 /**
  * Demonstration app for LensKit. This application builds an item-item CF model
  * from a CSV file, then generates recommendations for a user.
  *
  * Usage: java org.grouplens.lenskit.hello.HelloLenskit ratings.csv user
  */
+
 public class HelloLenskit implements Runnable {
 	public static void main(String[] args) throws SQLException {
-		args[0] = "72";
-		
+	
+
 		HelloLenskit hello = new HelloLenskit(args);
-		
-		// postgres connections 
-//		cxn = ConnectionManager.getConnectionPostGresql();
+
+		// postgres connections
+		// cxn = ConnectionManager.getConnectionPostGresql();
 		cxn = ConnectionManager.getConnectionVoltDB();
-		
+
 		try {
 			hello.run();
 		} catch (RuntimeException e) {
@@ -76,13 +78,13 @@ public class HelloLenskit implements Runnable {
 			cxn.close();
 		}
 	}
-	
+
 	private String delimiter = "\t";
 	private File inputFile = new File("data/sampledata/ratings.csv");
 	private File movieFile = new File("data/sampledata/movies.csv");
 	private List<Long> users;
 	private static Connection cxn;
-	
+
 	public HelloLenskit(String[] args) {
 		users = new ArrayList<Long>(args.length);
 		for (String arg : args) {
@@ -90,15 +92,24 @@ public class HelloLenskit implements Runnable {
 		}
 	}
 
+	public int test() {
+		if (true) {
+			return 1;
+		} else {
+			return 2;
+		}
+	}
+
 	public void run() {
 		// We first need to configure the data access.
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
-		
+
 		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
-		
-//		EventDAO dao = TextEventDAO.create(inputFile, Formats.movieLensLatest());
-		
+
+		// EventDAO dao = TextEventDAO.create(inputFile,
+		// Formats.movieLensLatest());
+
 		ItemNameDAO names;
 		try {
 			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
@@ -163,5 +174,4 @@ public class HelloLenskit implements Runnable {
 		}
 	}
 
-	
 }
