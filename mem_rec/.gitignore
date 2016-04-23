@@ -10,3 +10,4 @@
 libs/voltdb_setup_scripts/voltdbroot/
 libs/voltdb_setup_scripts/*.log
 libs/voltdb_setup_scripts/procedures/mem_rec/*.class
+libs/voltdb_setup_scripts/log/*
