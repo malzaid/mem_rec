@@ -1,0 +1,13 @@
+Progress this week:
+We build Voltdb trial version on our local machine. We have added our small test dataset and 
+created stored procedures that we will try to incorporate later. We have added database connection for VoltDB.
+Lenskit now able to do recommendations based on VoltDB data. Started working on RecDB, based on recommendation from 
+Dr. Sarwat. We are currently exploring how we can compare results form RecDB and our setup. 
+
+
+Plans for next week:
+We are planning to RecDB with Voltdb and regular Postgres on the same dataset. 
+We are currently doing Item-based CF. We will start using both Item-based CF and User-based CF to compared 
+results on VoltdB and postgres for now. 
+We plan add an other database based on column-major structure. We also plan to start running experiments
+on bigger dataset. 

@@ -59,13 +59,12 @@ import java.sql.Connection;
 
 public class HelloLenskit implements Runnable {
 	public static void main(String[] args) throws SQLException {
-	
 
 		HelloLenskit hello = new HelloLenskit(args);
 
 		// postgres connections
-		 cxn = ConnectionManager.getConnectionPostGresql();
-//		cxn = ConnectionManager.getConnectionVoltDB();
+		// cxn = ConnectionManager.getConnectionPostGresql();
+		cxn = ConnectionManager.getConnectionVoltDB();
 
 		try {
 			hello.run();
@@ -78,7 +77,7 @@ public class HelloLenskit implements Runnable {
 			cxn.close();
 		}
 	}
-	
+
 	private String delimiter = "\t";
 	private File inputFile = new File("data/sampledata/ratings.csv");
 	private File movieFile = new File("data/sampledata/movies.csv");
