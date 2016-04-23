@@ -1,0 +1,22 @@
+
+monetdbd start ~/monetdbdata/
+
+monetdb create memrec
+monetdb start memrec
+monetdb release memrec
+monetdb status
+
+
+mclient -u monetdb -d memrec
+monetdb
+CREATE USER akamzin WITH PASSWORD 'akamzin' NAME 'Azamat' SCHEMA sys;
+
+CREATE SCHEMA memrec AUTHORIZATION akamzin;
+
+ALTER USER "akamzin" SET SCHEMA memrec;
+
+
+CREATE TABLE movies (movieid int, title varchar(255), genres varchar(255));
+CREATE TABLE ratings (userid int, movieid int, rating float, timestamp int);
+
+use razordb to import data into memrec tables

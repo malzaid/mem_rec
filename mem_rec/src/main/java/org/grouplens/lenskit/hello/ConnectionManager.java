@@ -39,4 +39,18 @@ public class ConnectionManager {
         return con;
     }
     
+    
+    
+ // monetdb
+    public static Connection getConnectionMonetDb() throws SQLException {
+    	
+    	
+    	String url = "jdbc:monetdb://en4102945l.cidse.dhcp.asu.edu:54321/memrec";
+		// monetdb connections
+		con = DriverManager
+	            .getConnection(url,
+	            "akamzin", "akamzin");
+        return con;
+    }
+    
 }
