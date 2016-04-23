@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class Test {
 	 public static void main(String args[]) {
 	      Connection c = null;
-	      
+	  
 	      Statement stmt = null;
 	      
 	      try {
