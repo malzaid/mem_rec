@@ -64,8 +64,8 @@ public class HelloLenskit implements Runnable {
 
 		// postgres connections
 		// cxn = ConnectionManager.getConnectionPostGresql();
-		cxn = ConnectionManager.getConnectionMonetDb();
-
+		//cxn = ConnectionManager.getConnectionMonetDb();
+		cxn = ConnectionManager.getConnectionVoltDB();
 		try {
 			hello.run();
 		} catch (RuntimeException e) {
