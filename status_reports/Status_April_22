@@ -1,0 +1,7 @@
+Progress this week:
+We added configuration for using User-based CF. We have added experiments for for running time for both user based and item based CF.
+We have created and installed monetDB column store to our collection of main memory dbs with test data. 
+
+Plans for next week:
+We are planning to install and test RecDB with the test dataset and compare it with our DB installs. 
+We are planning to add much bigger dataset to start getting results of comparison between monetdb, voltdb, recDB and postgres.
