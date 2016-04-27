@@ -8,6 +8,14 @@ import org.lenskit.baseline.UserMeanItemScorer
 import org.lenskit.knn.MinNeighbors
 import org.lenskit.knn.item.ItemItemScorer
 
+import org.grouplens.lenskit.transform.normalize.MeanCenteringVectorNormalizer
+import org.grouplens.lenskit.transform.normalize.VectorNormalizer
+import org.lenskit.knn.NeighborhoodSize
+import org.lenskit.knn.user.NeighborFinder
+import org.lenskit.knn.user.SnapshotNeighborFinder
+import org.lenskit.knn.user.UserUserItemScorer
+
+
 bind ItemScorer to UserUserItemScorer
 // use item-user mean when user-user fails
 bind (BaselineScorer,ItemScorer) to UserMeanItemScorer
