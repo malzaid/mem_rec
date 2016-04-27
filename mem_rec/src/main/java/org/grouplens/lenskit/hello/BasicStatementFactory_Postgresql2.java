@@ -20,12 +20,12 @@ public class BasicStatementFactory_Postgresql2 extends BasicSQLStatementFactory 
 	
 	@Override
 	public String prepareUsers() {
-		return String.format("SELECT DISTINCT %s FROM %s limit 1000", userColumn, tableName);
+		return String.format("SELECT DISTINCT %s FROM %s", userColumn, tableName);
 	}
 
 	@Override
 	public String prepareItems() {
-		return String.format("SELECT DISTINCT %s FROM %s limit 1000", itemColumn, tableName);
+		return String.format("SELECT DISTINCT %s FROM %s", itemColumn, tableName);
 	}
 
 	@Override
