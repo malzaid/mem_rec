@@ -105,7 +105,7 @@ public class HelloLenskit implements Runnable {
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
 
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql2());
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
