@@ -110,11 +110,13 @@ public class HelloLenskit implements Runnable {
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
-		ItemNameDAO names;
+		ItemNameDAO names = null;
 		try {
-			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
-		} catch (IOException e) {
-			throw new RuntimeException("cannot load names", e);
+			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
+			names = new ItemNameLookup(cxn2,1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		// Next: load the LensKit algorithm configuration
