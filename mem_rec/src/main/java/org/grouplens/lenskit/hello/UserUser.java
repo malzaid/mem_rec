@@ -60,11 +60,14 @@ public class UserUser implements Runnable {
 	public static void main(String[] args) throws SQLException {
 
 		// User IDs temp hardcoded here, to be read from file
-				args = new String[718];
-				for (int i = 1; i < args.length; i++) {
-					args[i]=i+"";
+				String[] arg = new String[3];
+				for (int i = 1; i <= arg.length; i++) {
+					arg[i-1]=""+i;
 				}
 				
+				for (int i = 0; i < arg.length; i++) {
+					System.out.println(arg[i]);
+				}
 		UserUser rec = new UserUser(args);
 
 		// postgres connections
@@ -96,14 +99,6 @@ public class UserUser implements Runnable {
 		}
 	}
 
-	public int test() {
-		if (true) {
-			return 1;
-		} else {
-			return 2;
-		}
-	}
-
 	public void run() {
 		
 
@@ -122,7 +117,7 @@ public class UserUser implements Runnable {
 		// Next: load the LensKit algorithm configuration
 		LenskitConfiguration config = null;
 		try {
-			config = ConfigHelpers.load(new File("etc/user-user.groovy"));
+			config = ConfigHelpers.load(new File("etc/User-User.groovy"));
 		} catch (IOException e) {
 			throw new RuntimeException("could not load configuration", e);
 		}

@@ -63,12 +63,12 @@ public class ItemItem implements Runnable {
 
 		
 		// User IDs temp hardcoded here, to be read from file
-		args = new String[718];
-		for (int i = 1; i < args.length; i++) {
-			args[i]=i+"";
+		String [] arg= new String[3];
+		for (int i = 1; i <= arg.length; i++) {
+			arg[i-1]=""+i;
 		}
 		
-		ItemItem rec = new ItemItem(args);
+		ItemItem rec = new ItemItem(arg);
 
 		// postgres connections
 		// cxn = ConnectionManager.getConnectionPostGresql();
@@ -96,14 +96,6 @@ public class ItemItem implements Runnable {
 		users = new ArrayList<Long>(args.length);
 		for (String arg : args) {
 			users.add(Long.parseLong(arg));
-		}
-	}
-
-	public int test() {
-		if (true) {
-			return 1;
-		} else {
-			return 2;
 		}
 	}
 
@@ -168,9 +160,9 @@ public class ItemItem implements Runnable {
 		// Finally, get the recommender and use it.
 		try (LenskitRecommender rec = engine.createRecommender()) {
 			// we want to recommend items
+			System.out.println("passed this");
 			ItemRecommender irec = rec.getItemRecommender();
 			assert irec != null; // not null because we configured one
-
 			double sum = 0;
 			// for users
 			for (long user : users) {
