@@ -19,4 +19,8 @@ ALTER USER "akamzin" SET SCHEMA memrec;
 CREATE TABLE movies (movieid int, title varchar(255), genres varchar(255));
 CREATE TABLE ratings (userid int, movieid int, rating float, timestamp int);
 
+CREATE TABLE movies2 (movieid int, title varchar(255), genres varchar(255));
+CREATE TABLE ratings2 (userid int, movieid int, rating float, timestamp int);
+
+
 use razordb to import data into memrec tables

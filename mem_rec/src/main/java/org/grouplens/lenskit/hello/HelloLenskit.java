@@ -63,9 +63,10 @@ public class HelloLenskit implements Runnable {
 		HelloLenskit hello = new HelloLenskit(args);
 
 		// postgres connections
-		// cxn = ConnectionManager.getConnectionPostGresql();
-		//cxn = ConnectionManager.getConnectionMonetDb();
-		cxn = ConnectionManager.getConnectionVoltDB();
+		 cxn = ConnectionManager.getConnectionPostGresql();
+//		cxn = ConnectionManager.getConnectionMonetDb();
+//		cxn = ConnectionManager.getConnectionVoltDB();
+		
 		try {
 			hello.run();
 		} catch (RuntimeException e) {
@@ -104,7 +105,7 @@ public class HelloLenskit implements Runnable {
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
 
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql2());
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
