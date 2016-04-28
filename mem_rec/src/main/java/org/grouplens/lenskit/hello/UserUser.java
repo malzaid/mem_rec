@@ -90,9 +90,6 @@ public class UserUser implements Runnable {
 		users = new ArrayList<Long>(args.length);
 		
 		config();
-		for (String arg : args) {
-			users.add(Long.parseLong(arg));
-		}
 	}
 	
 	private void config() {
@@ -114,40 +111,35 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 0;
+		this.datasetType = 1;
 
-<<<<<<< HEAD
 	}
-	
-	public void run() {
-		
 
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
-=======
 	public void test()
 	{
-		UserDAO users = null;
+		UserIdLookup Ids = null;
 		
 		try {
 			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
-			users = new UserIdLookup(cxn2,1);
+			Ids = new UserIdLookup(cxn2,1);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		
-		LongSet ids = users.getUserIds();
+		users = Ids.getUserIds();
 		
-		System.out.println(ids.size());
+		System.out.println("There are "+ users.size()+" users in this model,,");
 
 	}
+	
+	
 	public void run() {
 		
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
 
 		
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
->>>>>>> 383def6c3a876bd695e07107685df5bd098423a7
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
@@ -164,7 +156,7 @@ public class UserUser implements Runnable {
 		// Next: load the LensKit algorithm configuration
 		LenskitConfiguration config = null;
 		try {
-			config = ConfigHelpers.load(new File("etc/User-User.groovy"));
+			config = ConfigHelpers.load(new File("etc/item-item.groovy"));
 		} catch (IOException e) {
 			throw new RuntimeException("could not load configuration", e);
 		}

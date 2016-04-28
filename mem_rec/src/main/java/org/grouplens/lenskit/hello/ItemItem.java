@@ -27,6 +27,7 @@ import org.lenskit.config.ConfigHelpers;
 import org.lenskit.data.dao.EventDAO;
 import org.lenskit.data.dao.ItemNameDAO;
 import org.lenskit.data.dao.MapItemNameDAO;
+import org.lenskit.data.dao.UserDAO;
 import org.grouplens.lenskit.data.sql.JDBCRatingDAO;
 import org.grouplens.lenskit.data.text.Formats;
 import org.grouplens.lenskit.data.text.TextEventDAO;
@@ -40,6 +41,8 @@ import org.lenskit.baseline.UserMeanBaseline;
 import org.lenskit.baseline.UserMeanItemScorer;
 import org.lenskit.knn.MinNeighbors;
 import org.lenskit.knn.item.ItemItemScorer;
+
+import it.unimi.dsi.fastutil.longs.LongSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,6 +93,8 @@ public class ItemItem implements Runnable {
 	private File movieFile = new File("data/sampledata/movies.csv");
 	private List<Long> users;
 	private static Connection cxn;
+	private int datasetType;
+	private static Connection cxn2;
 
 	public ItemItem(String[] args) {
 		users = new ArrayList<Long>(args.length);
@@ -98,12 +103,13 @@ public class ItemItem implements Runnable {
 		}
 	}
 
+	
 	public void run() {
 		// We first need to configure the data access.
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
 
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
@@ -174,5 +180,6 @@ public class ItemItem implements Runnable {
 		}
 		
 	}
+	
 
 }
