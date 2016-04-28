@@ -19,12 +19,20 @@ public class ItemNameLookup implements ItemNameDAO {
 	public ItemNameLookup(Connection cxn, int i) throws SQLException {
 		this.cxn = cxn;
 		this.i = i;
+		if (i == 0){// basic 100k
+			this.tableName = "movies_100k";
+		} else if (i == 1) {// 1 million 
+			this.tableName = "movies_1m";
+		}else if (i == 2) {// 20 million 
+			this.tableName = "movies_20m";
+		}
 		query = this.cxn.createStatement();
 	}
 
 	@Override
 	public String getItemName(long item) {
-		// TODO Auto-generated method stub
+		
+		
 		String sql = String.format("SELECT %s FROM %s WHERE %s = %s", userColumn, tableName,constraintColumn,item);
 		
 		String title = null;

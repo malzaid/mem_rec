@@ -62,11 +62,6 @@ public class HelloLenskit implements Runnable {
 
 		HelloLenskit hello = new HelloLenskit(args);
 
-		// postgres connections
-		// cxn = ConnectionManager.getConnectionPostGresql();
-		 cxn = ConnectionManager.getConnectionMonetDb();
-		// cxn = ConnectionManager.getConnectionVoltDB();
-		
 		try {
 			hello.run();
 		} catch (RuntimeException e) {
@@ -79,25 +74,42 @@ public class HelloLenskit implements Runnable {
 		}
 	}
 
-	private String delimiter = "\t";
-	private File inputFile = new File("data/sampledata/ratings.csv");
-	private File movieFile = new File("data/sampledata/movies.csv");
 	private List<Long> users;
+	private int datasetType;
 	private static Connection cxn;
-
+	private static Connection cxn2;
+	
 	public HelloLenskit(String[] args) {
 		users = new ArrayList<Long>(args.length);
+
+		config();
+
 		for (String arg : args) {
 			users.add(Long.parseLong(arg));
 		}
 	}
 
-	public int test() {
-		if (true) {
-			return 1;
-		} else {
-			return 2;
+	private void config() {
+		// postgres connections
+		try {
+			cxn = ConnectionManager.getConnectionPostGresql();
+			// cxn = ConnectionManager.getConnectionMonetDb();
+			// cxn = ConnectionManager.getConnectionVoltDB();
+			
+			
+			cxn2 = ConnectionManager.getConnectionPostGresql();
+			// cxn2 = ConnectionManager.getConnectionMonetDb();
+			// cxn2 = ConnectionManager.getConnectionVoltDB();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		// 0 - basic 100k
+		// 1 - 1 million
+		// 2 - 20 million
+		this.datasetType = 0;
+
 	}
 
 	public void run() {
@@ -105,17 +117,16 @@ public class HelloLenskit implements Runnable {
 		// We will use a simple delimited file; you can use something else like
 		// a database (see JDBCRatingDAO).
 
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
 		ItemNameDAO names = null;
 		try {
-			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
-			names = new ItemNameLookup(cxn2,1);
+			names = new ItemNameLookup(cxn2, datasetType);
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -174,7 +185,7 @@ public class HelloLenskit implements Runnable {
 				}
 			}
 		}
-		
+
 	}
 
 }
