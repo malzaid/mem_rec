@@ -16,6 +16,6 @@ csvloader --separator "," --file ratings.csv ratings_100k
 csvloader --separator ";" --file movies.csv movies_1m
 csvloader --separator ";" --file ratings.csv ratings_1m
 
-csvloader --separator ";" --file movies.csv movies_2m
-csvloader --separator ";" --file ratings.csv ratings_2m
+csvloader --separator "," --file movies.csv movies_20m
+csvloader --separator "," --file ratings.csv ratings_20m
 

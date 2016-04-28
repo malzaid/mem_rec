@@ -16,11 +16,21 @@ CREATE SCHEMA memrec AUTHORIZATION akamzin;
 ALTER USER "akamzin" SET SCHEMA memrec;
 
 
-CREATE TABLE movies (movieid int, title varchar(255), genres varchar(255));
-CREATE TABLE ratings (userid int, movieid int, rating float, timestamp int);
+CREATE TABLE movies_100k (movieid int, title varchar(255), genres varchar(255));
+CREATE TABLE ratings_100k (userid int, movieid int, rating float, timestamp int);
 
-CREATE TABLE movies2 (movieid int, title varchar(255), genres varchar(255));
-CREATE TABLE ratings2 (userid int, movieid int, rating float, timestamp int);
+CREATE TABLE movies_20m (movieid int, title varchar(255), genres varchar(255));
+CREATE TABLE ratings_20m (userid int, movieid int, rating float, timestamp int);
 
+
+CREATE TABLE movies_1m (movieid int, title varchar(255), genres varchar(255));
+CREATE TABLE ratings_1m (userid int, movieid int, rating float, timestamp int);
+
+INSERT INTO movies_20m SELECT * FROM movies;
+INSERT INTO ratings_20m SELECT * FROM ratings;
+
+
+INSERT INTO movies_100k SELECT * FROM movies2;
+INSERT INTO ratings_100k SELECT * FROM ratings2;
 
 use razordb to import data into memrec tables
