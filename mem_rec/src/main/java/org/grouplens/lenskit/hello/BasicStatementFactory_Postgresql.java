@@ -15,8 +15,18 @@ public class BasicStatementFactory_Postgresql extends BasicSQLStatementFactory {
 	private String userColumn = "userid";
 	private String itemColumn = "movieid";
 	private String ratingColumn = "rating";
-	
 	private String timestampColumn = "timestamp";
+	
+	public BasicStatementFactory_Postgresql(int i) {
+		if (i == 0){// basic 100k
+			this.tableName = "ratings_100k";
+		} else if (i == 1) {// 1 million 
+			this.tableName = "ratings_1m";
+		}else if (i == 2) {// 20 million 
+			this.tableName = "ratings_20m";
+		}
+		
+	}
 	
 	@Override
 	public String prepareUsers() {
