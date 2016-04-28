@@ -59,21 +59,9 @@ import java.sql.Connection;
 public class UserUser implements Runnable {
 	public static void main(String[] args) throws SQLException {
 
-		// User IDs temp hardcoded here, to be read from file
-				String[] arg = new String[3];
-				for (int i = 1; i <= arg.length; i++) {
-					arg[i-1]=""+i;
-				}
-				
-				for (int i = 0; i < arg.length; i++) {
-					System.out.println(arg[i]);
-				}
+		
 		UserUser rec = new UserUser(args);
 
-		// postgres connections
-		 cxn = ConnectionManager.getConnectionPostGresql();
-		// cxn = ConnectionManager.getConnectionMonetDb();
-		// cxn = ConnectionManager.getConnectionVoltDB();
 		try {
 			rec.run();
 		} catch (RuntimeException e) {
@@ -91,26 +79,53 @@ public class UserUser implements Runnable {
 	private File movieFile = new File("data/sampledata/movies.csv");
 	private List<Long> users;
 	private static Connection cxn;
-
+	private int datasetType;
+	private static Connection cxn2;
+	
 	public UserUser(String[] args) {
 		users = new ArrayList<Long>(args.length);
+		
+		config();
 		for (String arg : args) {
 			users.add(Long.parseLong(arg));
 		}
 	}
+	
+	private void config() {
+		// postgres connections
+		try {
+			cxn = ConnectionManager.getConnectionPostGresql();
+			// cxn = ConnectionManager.getConnectionMonetDb();
+			// cxn = ConnectionManager.getConnectionVoltDB();
+			
+			
+			cxn2 = ConnectionManager.getConnectionPostGresql();
+			// cxn2 = ConnectionManager.getConnectionMonetDb();
+			// cxn2 = ConnectionManager.getConnectionVoltDB();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// 0 - basic 100k
+		// 1 - 1 million
+		// 2 - 20 million
+		this.datasetType = 0;
 
+	}
+	
 	public void run() {
 		
 
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
 		ItemNameDAO names;
 		try {
-			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
-		} catch (IOException e) {
+			names = new ItemNameLookup(cxn2, datasetType);
+		} catch ( SQLException e) {
 			throw new RuntimeException("cannot load names", e);
 		}
 
