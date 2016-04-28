@@ -111,7 +111,7 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 0;
+		this.datasetType = 1;
 
 	}
 

@@ -5,15 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 
-import org.lenskit.data.dao.ItemNameDAO;
-import org.lenskit.data.dao.UserDAO;
-import org.lenskit.results.Results;
-
-import it.unimi.dsi.fastutil.longs.LongCollection;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import it.unimi.dsi.fastutil.longs.LongSet;
 
 public class UserIdLookup {
 
