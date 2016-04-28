@@ -27,6 +27,7 @@ import org.lenskit.config.ConfigHelpers;
 import org.lenskit.data.dao.EventDAO;
 import org.lenskit.data.dao.ItemNameDAO;
 import org.lenskit.data.dao.MapItemNameDAO;
+import org.lenskit.data.dao.UserDAO;
 import org.grouplens.lenskit.data.sql.JDBCRatingDAO;
 import org.grouplens.lenskit.data.text.Formats;
 import org.grouplens.lenskit.data.text.TextEventDAO;
@@ -41,6 +42,8 @@ import org.lenskit.baseline.UserMeanItemScorer;
 import org.lenskit.knn.MinNeighbors;
 import org.lenskit.knn.item.ItemItemScorer;
 
+import it.unimi.dsi.fastutil.longs.LongSet;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -48,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 
 /**
  * Demonstration app for LensKit. This application builds an item-item CF model
@@ -112,17 +116,45 @@ public class UserUser implements Runnable {
 		// 2 - 20 million
 		this.datasetType = 0;
 
+<<<<<<< HEAD
 	}
 	
 	public void run() {
 		
 
 		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
+=======
+	public void test()
+	{
+		UserDAO users = null;
+		
+		try {
+			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
+			users = new UserIdLookup(cxn2,1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		LongSet ids = users.getUserIds();
+		
+		System.out.println(ids.size());
+
+	}
+	public void run() {
+		
+
+		
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
+>>>>>>> 383def6c3a876bd695e07107685df5bd098423a7
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
 		ItemNameDAO names;
+		test();
+		
 		try {
 			names = new ItemNameLookup(cxn2, datasetType);
 		} catch ( SQLException e) {
@@ -173,6 +205,8 @@ public class UserUser implements Runnable {
 			System.out.println("--------------------------------------------");
 		
 		}
+		
 	}
-
+	
+	
 }

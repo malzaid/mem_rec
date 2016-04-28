@@ -22,7 +22,6 @@
 package org.grouplens.lenskit.hello;
 
 import org.lenskit.LenskitRecommenderEngine;
-import org.lenskit.api.RecommenderBuildException;
 import org.lenskit.LenskitConfiguration;
 import org.lenskit.config.ConfigHelpers;
 import org.lenskit.data.dao.EventDAO;
@@ -109,11 +108,13 @@ public class ItemItem implements Runnable {
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
-		ItemNameDAO names;
+		ItemNameDAO names = null;
 		try {
-			names = MapItemNameDAO.fromCSVFile(movieFile, 1);
-		} catch (IOException e) {
-			throw new RuntimeException("cannot load names", e);
+			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
+			names = new ItemNameLookup(cxn2,1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		// Next: load the LensKit algorithm configuration
@@ -152,43 +153,26 @@ public class ItemItem implements Runnable {
 		// and data source. This will compute the similarity matrix and return a
 		// recommender
 		// engine that uses it.
-		
-		
-
 		LenskitRecommenderEngine engine = LenskitRecommenderEngine.build(config);
 
 		// Finally, get the recommender and use it.
 		try (LenskitRecommender rec = engine.createRecommender()) {
 			// we want to recommend items
-			System.out.println("passed this");
 			ItemRecommender irec = rec.getItemRecommender();
 			assert irec != null; // not null because we configured one
-			double sum = 0;
+
 			// for users
 			for (long user : users) {
 				// get 10 recommendation for the user
-				long startTime = System.nanoTime();
 				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
 				System.out.format("Recommendations for user %d:\n", user);
 				for (Result item : recs) {
 					String name = names.getItemName(item.getId());
 					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
-
 				}
-				long endTime = System.nanoTime();
-
-				long duration = (endTime - startTime) / 1000000; 
-				sum+=duration;
-				System.out.println("--------------------------------------------");
-				System.out.println("User " + user + " recommendition generated in " + duration + " ms");
-				System.out.println("--------------------------------------------");
 			}
-			
-			System.out.println("--------------------------------------------");
-			System.out.println("Avg User time to recommendition generated in " + sum/users.size() + " ms");
-			System.out.println("--------------------------------------------");
-		
 		}
+		
 	}
 
 }
