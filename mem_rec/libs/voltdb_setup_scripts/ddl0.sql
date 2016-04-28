@@ -30,8 +30,8 @@ CREATE TABLE movies_100k (
 
 END_OF_BATCH
 
-CREATE INDEX movies_idx ON movies_100k (movieid);
-CREATE INDEX ratings_idx ON ratings_100k (userid,movieid);
+CREATE INDEX movies_idx100k  ON movies_100k (movieid);
+CREATE INDEX ratings_idx100k ON ratings_100k (userid,movieid);
 
 
 

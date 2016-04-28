@@ -30,8 +30,8 @@ CREATE TABLE movies_2m (
 
 END_OF_BATCH
 
-CREATE INDEX movies_idx ON movies_2m (movieid);
-CREATE INDEX ratings_idx ON ratings_2m (userid,movieid);
+CREATE INDEX movies_idx2m ON movies_2m (movieid);
+CREATE INDEX ratings_idx2m ON ratings_2m (userid,movieid);
 
 -- LOAD CLASSES storedprocs.jar;
 
