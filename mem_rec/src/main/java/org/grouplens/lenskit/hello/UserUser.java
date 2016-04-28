@@ -115,45 +115,20 @@ public class UserUser implements Runnable {
 		// 1 - 1 million
 		// 2 - 20 million
 		this.datasetType = 0;
-
-<<<<<<< HEAD
 	}
+	
 	
 	public void run() {
 		
 
+		
 		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
-=======
-	public void test()
-	{
-		UserDAO users = null;
-		
-		try {
-			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
-			users = new UserIdLookup(cxn2,1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		
-		LongSet ids = users.getUserIds();
-		
-		System.out.println(ids.size());
-
-	}
-	public void run() {
-		
-
-		
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql());
->>>>>>> 383def6c3a876bd695e07107685df5bd098423a7
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
 		ItemNameDAO names;
-		test();
 		
 		try {
 			names = new ItemNameLookup(cxn2, datasetType);
