@@ -111,7 +111,7 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 1;
+		this.datasetType = 0;
 
 	}
 
@@ -121,7 +121,7 @@ public class UserUser implements Runnable {
 		
 		try {
 			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
-			Ids = new UserIdLookup(cxn2,1);
+			Ids = new UserIdLookup(cxn2,datasetType);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,6 +132,9 @@ public class UserUser implements Runnable {
 		
 		System.out.println("There are "+ users.size()+" users in this model,,");
 
+		for (Long long1 : users) {
+			System.out.println(long1);
+		}
 	}
 	
 	
@@ -156,7 +159,7 @@ public class UserUser implements Runnable {
 		// Next: load the LensKit algorithm configuration
 		LenskitConfiguration config = null;
 		try {
-			config = ConfigHelpers.load(new File("etc/item-item.groovy"));
+			config = ConfigHelpers.load(new File("etc/User-User.groovy"));
 		} catch (IOException e) {
 			throw new RuntimeException("could not load configuration", e);
 		}

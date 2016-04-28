@@ -25,5 +25,6 @@ within (UserVectorNormalizer) {
     // for normalization, just center on user means
     bind VectorNormalizer to MeanCenteringVectorNormalizer
 }
-set NeighborhoodSize to 30
+//default size 30
+set NeighborhoodSize to 20
 

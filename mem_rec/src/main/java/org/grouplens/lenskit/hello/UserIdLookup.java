@@ -44,15 +44,14 @@ public class UserIdLookup {
 		// String sql2 = String.format("SELECT COUNT(DISTINCT %s) FROM %s",
 		// userColumn, tableName);
 
+		System.out.println(sql);
 		ArrayList<Long> users = new ArrayList<Long>();
 
 		try {
 			ResultSet results = query.executeQuery(sql);
-			results.next();
-			while (!results.isAfterLast()) {
+			while (results.next()) {
 				users.add(Long.parseLong(results.getString(1)));
-				results.next();
-				System.out.println(users.size());
+				System.out.println(results.getString(1));
 
 			}
 
