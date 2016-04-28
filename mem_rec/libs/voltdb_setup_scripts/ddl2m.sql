@@ -8,7 +8,7 @@ file -inlinebatch END_OF_BATCH
 --  Table structure for "ratings"
 -- ----------------------------
 
-CREATE TABLE ratings (
+CREATE TABLE ratings_20m (
 	userid		integer		NOT NULL,
 	movieid		integer		NOT NULL,
 	rating		FLOAT		NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE ratings (
 --  Table structure for "movies"
 -- ----------------------------
 
-CREATE TABLE movies (
+CREATE TABLE movies_20m (
 	movieid	integer			NOT NULL,
 	title	varchar(255)	NOT NULL,
 	genres	varchar(255)	NOT NULL
@@ -30,8 +30,8 @@ CREATE TABLE movies (
 
 END_OF_BATCH
 
-CREATE INDEX movies_idx ON movies (movieid);
-CREATE INDEX ratings_idx ON ratings (userid,movieid);
+CREATE INDEX movies_idx20m ON movies_20m (movieid);
+CREATE INDEX ratings_idx20m ON ratings_20m (userid,movieid);
 
 -- LOAD CLASSES storedprocs.jar;
 

@@ -23,19 +23,16 @@ public class UserIdLookup {
 	private String userColumn = "userid";
 	private Statement query;
 
-	
-	
 	public UserIdLookup(Connection cxn, int i) throws SQLException {
 		this.cxn = cxn;
 		this.i = i;
 		query = this.cxn.createStatement();
-		
-		
-		if (i == 0){// basic 100k
+
+		if (i == 0) {// basic 100k
 			this.tableName = "ratings_100k";
-		} else if (i == 1) {// 1 million 
+		} else if (i == 1) {// 1 million
 			this.tableName = "ratings_1m";
-		}else if (i == 2) {// 20 million 
+		} else if (i == 2) {// 20 million
 			this.tableName = "ratings_20m";
 		}
 
@@ -44,27 +41,26 @@ public class UserIdLookup {
 	public ArrayList<Long> getUserIds() {
 		// TODO Auto-generated method stub
 		String sql = String.format("SELECT DISTINCT %s FROM %s", userColumn, tableName);
-		//String sql2 = String.format("SELECT COUNT(DISTINCT %s) FROM %s", userColumn, tableName);
-		
+		// String sql2 = String.format("SELECT COUNT(DISTINCT %s) FROM %s",
+		// userColumn, tableName);
+
 		ArrayList<Long> users = new ArrayList<Long>();
-		
-				try {
+
+		try {
 			ResultSet results = query.executeQuery(sql);
 			results.next();
-			while(!results.isAfterLast())
-			{
+			while (!results.isAfterLast()) {
 				users.add(Long.parseLong(results.getString(1)));
 				results.next();
 				System.out.println(users.size());
 
 			}
-			
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		
+		}
+
 		return users;
 	}
 

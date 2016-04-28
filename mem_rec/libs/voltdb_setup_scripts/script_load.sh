@@ -10,5 +10,12 @@ jar cvf storedprocs.jar *.class
 mv storedprocs.jar ../../.
 cd ../..
 sqlcmd < ddl.sql
-csvloader --separator "," --file movies.csv movies
-csvloader --separator "," --file ratings.csv ratings
+csvloader --separator "," --file movies.csv movies_100k
+csvloader --separator "," --file ratings.csv ratings_100k
+
+csvloader --separator ";" --file movies.csv movies_1m
+csvloader --separator ";" --file ratings.csv ratings_1m
+
+csvloader --separator ";" --file movies.csv movies_2m
+csvloader --separator ";" --file ratings.csv ratings_2m
+
