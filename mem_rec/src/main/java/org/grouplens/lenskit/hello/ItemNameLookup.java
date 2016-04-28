@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.lenskit.data.dao.ItemNameDAO;
+import org.lenskit.results.Results;
 
 public class ItemNameLookup implements ItemNameDAO {
 
