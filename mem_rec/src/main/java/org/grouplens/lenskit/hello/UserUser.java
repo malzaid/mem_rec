@@ -43,6 +43,7 @@ import org.lenskit.knn.MinNeighbors;
 import org.lenskit.knn.item.ItemItemScorer;
 
 import it.unimi.dsi.fastutil.longs.LongSet;
+import jxl.write.WriteException;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,8 +62,16 @@ import java.sql.ResultSet;
  */
 
 public class UserUser implements Runnable {
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, WriteException, IOException {
 
+		 WriteExcel test = new WriteExcel();
+		    test.setOutputFile("c:/temp/lars.xls");
+		    test.write();
+		    System.out
+		        .println("Please check the result file under c:/temp/lars.xls ");
+		 
+		    
+		
 		
 		UserUser rec = new UserUser(args);
 
@@ -159,7 +168,7 @@ public class UserUser implements Runnable {
 		// Next: load the LensKit algorithm configuration
 		LenskitConfiguration config = null;
 		try {
-			config = ConfigHelpers.load(new File("etc/Eval.groovy"));
+			config = ConfigHelpers.load(new File("etc/item-item.groovy"));
 		} catch (IOException e) {
 			throw new RuntimeException("could not load configuration", e);
 		}
@@ -187,6 +196,7 @@ public class UserUser implements Runnable {
 
 				}
 				long endTime = System.nanoTime();
+				
 
 				long duration = (endTime - startTime) / 1000000; 
 				sum+=duration;
