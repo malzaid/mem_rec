@@ -111,7 +111,7 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 1;
+		this.datasetType = 0;
 
 	}
 
@@ -159,7 +159,7 @@ public class UserUser implements Runnable {
 		// Next: load the LensKit algorithm configuration
 		LenskitConfiguration config = null;
 		try {
-			config = ConfigHelpers.load(new File("etc/User-User.groovy"));
+			config = ConfigHelpers.load(new File("etc/Eval.groovy"));
 		} catch (IOException e) {
 			throw new RuntimeException("could not load configuration", e);
 		}
