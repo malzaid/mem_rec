@@ -29,7 +29,7 @@ public void setOutputFile(String inputFile) {
   this.inputFile = inputFile;
   }
 
-  public void write() throws IOException, WriteException {
+  public void write(long[] userId, long [] time) throws IOException, WriteException {
     File file = new File(inputFile);
     WorkbookSettings wbSettings = new WorkbookSettings();
 
@@ -39,7 +39,7 @@ public void setOutputFile(String inputFile) {
     workbook.createSheet("Report", 0);
     WritableSheet excelSheet = workbook.getSheet(0);
     createLabel(excelSheet);
-    createContent(excelSheet);
+    createContent(excelSheet, userId, time);
 
     workbook.write();
     workbook.close();
@@ -73,33 +73,34 @@ public void setOutputFile(String inputFile) {
 
   }
 
-  private void createContent(WritableSheet sheet) throws WriteException,
-      RowsExceededException {
-    // Write a few number
-    for (int i = 1; i < 10; i++) {
-      // First column
-      addNumber(sheet, 0, i, i + 10);
-      // Second column
-      addNumber(sheet, 1, i, i * i);
-    }
-    // Lets calculate the sum of it
-    StringBuffer buf = new StringBuffer();
-    buf.append("SUM(A2:A10)");
-    Formula f = new Formula(0, 10, buf.toString());
-    //sheet.addCell(f);
-    buf = new StringBuffer();
-    buf.append("SUM(B2:B10)");
-    f = new Formula(1, 10, buf.toString());
-    sheet.addCell(f);
+   
+  private void createContent(WritableSheet sheet,long[] userId, long [] time) throws WriteException,
+  RowsExceededException {
+// Write a few number
+for (int i = 0; i < userId.length; i++) {
+  // First column
+  addNumber(sheet, 0, i+1, userId[i]);
+  // Second column
+  addNumber(sheet, 1, i+1, time[i]);
+}
+// Lets calculate the sum of it
+StringBuffer buf = new StringBuffer();
+buf.append("SUM(A2:A"+userId.length+")");
+Formula f = new Formula(0, userId.length, buf.toString());
+//sheet.addCell(f);
+buf = new StringBuffer();
+buf.append("SUM(B2:B"+userId.length+")");
+f = new Formula(1, userId.length+1, buf.toString());
+sheet.addCell(f);
 
-    // now a bit of text
-   // for (int i = 12; i < 20; i++) {
-      // First column
-    //  addLabel(sheet, 0, i, "Boring text " + i);
-      // Second column
-     // addLabel(sheet, 1, i, "Another text");
-    //}
-  }
+// now a bit of text
+// for (int i = 12; i < 20; i++) {
+  // First column
+//  addLabel(sheet, 0, i, "Boring text " + i);
+  // Second column
+ // addLabel(sheet, 1, i, "Another text");
+//}
+}
 
   private void addCaption(WritableSheet sheet, int column, int row, String s)
       throws RowsExceededException, WriteException {
@@ -114,6 +115,13 @@ public void setOutputFile(String inputFile) {
     number = new Number(column, row, integer, times);
     sheet.addCell(number);
   }
+  
+  private void addNumber(WritableSheet sheet, int column, int row,
+	      long integer) throws WriteException, RowsExceededException {
+	    Number number;
+	    number = new Number(column, row, integer, times);
+	    sheet.addCell(number);
+	  }
 
   private void addLabel(WritableSheet sheet, int column, int row, String s)
       throws WriteException, RowsExceededException {

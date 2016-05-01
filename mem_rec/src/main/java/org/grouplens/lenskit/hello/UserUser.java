@@ -64,15 +64,6 @@ import java.sql.ResultSet;
 public class UserUser implements Runnable {
 	public static void main(String[] args) throws SQLException, WriteException, IOException {
 
-		 WriteExcel test = new WriteExcel();
-		    test.setOutputFile("c:/temp/lars.xls");
-		    test.write();
-		    System.out
-		        .println("Please check the result file under c:/temp/lars.xls ");
-		 
-		    
-		
-		
 		UserUser rec = new UserUser(args);
 
 		try {
@@ -104,14 +95,14 @@ public class UserUser implements Runnable {
 	private void config() {
 		// postgres connections
 		try {
-			cxn = ConnectionManager.getConnectionPostGresql();
+			//cxn = ConnectionManager.getConnectionPostGresql();
 			// cxn = ConnectionManager.getConnectionMonetDb();
-			// cxn = ConnectionManager.getConnectionVoltDB();
+			 cxn = ConnectionManager.getConnectionVoltDB();
 			
 			
-			cxn2 = ConnectionManager.getConnectionPostGresql();
+			//cxn2 = ConnectionManager.getConnectionPostGresql();
 			// cxn2 = ConnectionManager.getConnectionMonetDb();
-			// cxn2 = ConnectionManager.getConnectionVoltDB();
+			 cxn2 = ConnectionManager.getConnectionVoltDB();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,9 +132,15 @@ public class UserUser implements Runnable {
 		
 		System.out.println("There are "+ users.size()+" users in this model,,");
 
-		for (Long long1 : users) {
-			System.out.println(long1);
-		}
+		
+		//testing
+		users.clear();
+		users.add((long) 5);
+		users.add((long) 72);
+		users.add((long) 20);
+		//for (Long long1 : users) {
+		//	System.out.println(long1);
+		//}
 	}
 	
 	
@@ -174,44 +171,65 @@ public class UserUser implements Runnable {
 		}
 		// Add our data component to the configuration
 		config.addComponent(dao);
+		long startTime = System.nanoTime();
 
 		LenskitRecommenderEngine engine = LenskitRecommenderEngine.build(config);
+		long endTime = System.nanoTime();
+		
 
+		long duration = (endTime - startTime) / 1000000; 
+
+		System.out.println("time to build model: "+ duration);
 		// Finally, get the recommender and use it.
 		try (LenskitRecommender rec = engine.createRecommender()) {
 			// we want to recommend items
+
 			ItemRecommender irec = rec.getItemRecommender();
+
 			assert irec != null; // not null because we configured one
 
 			double sum = 0;
+			long [] userID = new long[users.size()];
+			long [] time = new long[users.size()];
+			int i=0;
 			// for users
 			for (long user : users) {
 				// get 10 recommendation for the user
-				long startTime = System.nanoTime();
+				startTime = System.nanoTime();
 				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
 				System.out.format("Recommendations for user %d:\n", user);
 				for (Result item : recs) {
 					String name = names.getItemName(item.getId());
 					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
-
 				}
-				long endTime = System.nanoTime();
+				endTime = System.nanoTime();
 				
 
-				long duration = (endTime - startTime) / 1000000; 
+				duration = (endTime - startTime) / 1000000; 
 				sum+=duration;
+				userID[i]=user;
+				time[i]=duration;
+				i++;
 				System.out.println("--------------------------------------------");
 				System.out.println("User " + user + " recommendition generated in " + duration + " ms");
 				System.out.println("--------------------------------------------");
 			}
+			
+			 WriteExcel test = new WriteExcel();
+			    test.setOutputFile("c:/temp/results.xls");
+			    test.write(userID,time);
+			    System.out
+			        .println("Please check the result file under c:/temp/results.xls ");
 			
 			System.out.println("--------------------------------------------");
 			System.out.println("Avg User time to recommendition generated in " + sum/users.size() + " ms");
 			System.out.println("--------------------------------------------");
 		
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
-	
-	
+		
 }
