@@ -109,7 +109,7 @@ public class UserUser implements Runnable {
 
 		// 1 - item-item
 		// 2 - user-user
-		this.algorithm = 1;
+		this.algorithm = 3;
 		//this.algo = "etc/item-item.groovy";
 		//this.algo = "etc/User-User.groovy";
 		this.algo = "etc/SVD.groovy";
@@ -276,10 +276,24 @@ public class UserUser implements Runnable {
 
 	private String filename() {
 		String name = "results_";
-		if (algorithm == 1)
+		
+		switch (algorithm) {
+		case 1:
 			name += "Item_";
-		else
+			break;
+			
+		case 2:
 			name += "User_";
+			break;
+			
+		case 3:
+			name += "SVD_";
+			break;
+
+		default:
+			break;
+		}
+		
 
 		switch (databaseType) {
 		case 1:
