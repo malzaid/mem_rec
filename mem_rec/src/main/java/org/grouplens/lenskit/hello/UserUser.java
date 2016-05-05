@@ -120,24 +120,22 @@ public class UserUser implements Runnable {
 
 		case 2:
 			this.algo = "etc/User-User.groovy";
-
 			break;
 
 		case 3:
 			this.algo = "etc/SVD.groovy";
-
 			break;
 
 		case 4:
 			this.algo = "etc/SlopeOne.groovy";
-
 			break;
+			
 		default:
 			break;
 		}
 		
 		
-		// postgres connections
+		// Set connection values
 		try {
 
 			switch (databaseType) {
@@ -176,11 +174,11 @@ public class UserUser implements Runnable {
 
 		System.out.println("There are " + users.size() + " users in this model,,");
 
-		// testing
-		users.clear();
-		users.add((long) 438);
-		users.add((long) 72);
-		users.add((long) 20);
+		// testing temp to be removed
+		//users.clear();
+		//users.add((long) 438);
+		//users.add((long) 72);
+		//users.add((long) 20);
 		// for (Long long1 : users) {
 		// System.out.println(long1);
 		// }

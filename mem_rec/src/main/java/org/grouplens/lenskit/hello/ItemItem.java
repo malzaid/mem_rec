@@ -105,14 +105,7 @@ public class ItemItem implements Runnable {
 
 	
 	public void run() {
-		// We first need to configure the data access.
-		// We will use a simple delimited file; you can use something else like
-		// a database (see JDBCRatingDAO).
-
 		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
-
-		// EventDAO dao = TextEventDAO.create(inputFile,
-		// Formats.movieLensLatest());
 
 		ItemNameDAO names = null;
 		try {
@@ -133,32 +126,6 @@ public class ItemItem implements Runnable {
 		// Add our data component to the configuration
 		config.addComponent(dao);
 
-		/*
-		 * 
-		 * LenskitConfiguration config = new LenskitConfiguration();
-		 * config.addComponent(dao); // Use item-item CF to score items
-		 * config.bind(ItemScorer.class) .to(ItemItemScorer.class); // let's use
-		 * personalized mean rating as the baseline/fallback predictor. //
-		 * 2-step process: // First, use the user mean rating as the baseline
-		 * scorer config.bind(BaselineScorer.class, ItemScorer.class)
-		 * .to(UserMeanItemScorer.class); // Second, use the item mean rating as
-		 * the base for user means config.bind(UserMeanBaseline.class,
-		 * ItemScorer.class) .to(ItemMeanRatingItemScorer.class); // and
-		 * normalize ratings by baseline prior to computing similarities
-		 * config.bind(UserVectorNormalizer.class)
-		 * .to(BaselineSubtractingUserVectorNormalizer.class);
-		 * config.bind(MinNeighbors.class);
-		 */
-
-		// There are more parameters, roles, and components that can be set. See
-		// the
-		// JavaDoc for each recommender algorithm for more information.
-
-		// Now that we have a configuration, build a recommender engine from the
-		// configuration
-		// and data source. This will compute the similarity matrix and return a
-		// recommender
-		// engine that uses it.
 		LenskitRecommenderEngine engine = LenskitRecommenderEngine.build(config);
 
 		// Finally, get the recommender and use it.
