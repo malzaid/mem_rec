@@ -105,13 +105,13 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 1;
+		this.datasetType = 2;
 
 		// 1 - item-item
 		// 2 - user-user
 		this.algorithm = 1;
 		this.algo = "etc/item-item.groovy";
-		// this.algo = "etc/user-User.groovy";
+		//this.algo = "etc/User-User.groovy";
 		// postgres connections
 		try {
 
@@ -154,7 +154,7 @@ public class UserUser implements Runnable {
 
 		// testing
 		//users.clear();
-		//users.add((long) 5);
+		//users.add((long) 438);
 		//users.add((long) 72);
 		//users.add((long) 20);
 		// for (Long long1 : users) {
@@ -208,6 +208,10 @@ public class UserUser implements Runnable {
 			long[] time = new long[users.size()];
 			int i = 0;
 			// for users
+			
+			
+			long startThroughputTime = System.nanoTime();
+
 			for (long user : users) {
 				// get 10 recommendation for the user
 				startTime = System.nanoTime();
@@ -224,20 +228,42 @@ public class UserUser implements Runnable {
 				userID[i] = user;
 				time[i] = duration;
 				i++;
-				System.out.print(".");
+				
+				System.out.println(".");
+				//limit the size for 1000
+				//if(i==999)
+				//	break;
+				
+				
+				//throughput break
+				if((((System.nanoTime() - startThroughputTime))/1000000000)/60 >=5){
+					System.out.println("Times Up");
+					break;
+					}
 				//System.out.println("--------------------------------------------");
 				//System.out.println("User " + user + " recommendition generated in " + duration + " ms");
 				//System.out.println("--------------------------------------------");
 			}
 
+			long endThroughputTime = System.nanoTime();
+
+			duration = (endThroughputTime - startThroughputTime) / 1000000;
+			
 			WriteExcel test = new WriteExcel();
 
 			test.setOutputFile(filename());
 			test.write(userID, time, datasetType, databaseType, algorithm);
 			System.out.println("Please check the result file under results.xls ");
 
+			
+			//limit the size to 1000
+			//System.out.println("--------------------------------------------");
+			//System.out.println("Avg User time to recommendition generated in " + sum / 1000 + " ms");
+			//System.out.println("--------------------------------------------");
+			
+			
 			System.out.println("--------------------------------------------");
-			System.out.println("Avg User time to recommendition generated in " + sum / users.size() + " ms");
+			System.out.println("Avg User time to recommendition generated in " + sum / i + " ms");
 			System.out.println("--------------------------------------------");
 
 		} catch (Exception e) {
@@ -286,7 +312,7 @@ public class UserUser implements Runnable {
 			break;
 		}
 
-		name += ".xls";
+		name += "limited5min_Run2.xls";
 		return name;
 	}
 }

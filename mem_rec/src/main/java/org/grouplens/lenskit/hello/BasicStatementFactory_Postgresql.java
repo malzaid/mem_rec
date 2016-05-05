@@ -30,7 +30,7 @@ public class BasicStatementFactory_Postgresql extends BasicSQLStatementFactory {
 	
 	@Override
 	public String prepareUsers() {
-		return String.format("SELECT DISTINCT %s FROM %s", userColumn, tableName);
+		return String.format("SELECT DISTINCT %s FROM %s ORDER BY %s", userColumn, tableName,userColumn);
 	}
 
 	@Override
