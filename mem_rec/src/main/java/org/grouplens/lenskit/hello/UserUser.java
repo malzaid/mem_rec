@@ -105,14 +105,37 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 0;
+		this.datasetType = 1;
 
 		// 1 - item-item
 		// 2 - user-user
-		this.algorithm = 3;
-		//this.algo = "etc/item-item.groovy";
-		//this.algo = "etc/User-User.groovy";
-		this.algo = "etc/SVD.groovy";
+		// 3 - SVD
+		// 4 - SlopeOne
+		this.algorithm = 4;
+		
+		switch (algorithm) {
+		case 1:
+			this.algo = "etc/item-item.groovy";
+			break;
+
+		case 2:
+			this.algo = "etc/User-User.groovy";
+
+			break;
+
+		case 3:
+			this.algo = "etc/SVD.groovy";
+
+			break;
+
+		case 4:
+			this.algo = "etc/SlopeOne.groovy";
+
+			break;
+		default:
+			break;
+		}
+		
 		
 		// postgres connections
 		try {
@@ -139,11 +162,10 @@ public class UserUser implements Runnable {
 
 	}
 
-	public void test() {
+	public void getUsers() {
 		UserIdLookup Ids = null;
 
 		try {
-			// Connection cxn2 = ConnectionManager.getConnectionPostGresql();
 			Ids = new UserIdLookup(cxn2, datasetType);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -155,10 +177,10 @@ public class UserUser implements Runnable {
 		System.out.println("There are " + users.size() + " users in this model,,");
 
 		// testing
-		//users.clear();
-		//users.add((long) 438);
-		//users.add((long) 72);
-		//users.add((long) 20);
+		users.clear();
+		users.add((long) 438);
+		users.add((long) 72);
+		users.add((long) 20);
 		// for (Long long1 : users) {
 		// System.out.println(long1);
 		// }
@@ -172,7 +194,7 @@ public class UserUser implements Runnable {
 		// Formats.movieLensLatest());
 
 		ItemNameDAO names;
-		test();
+		getUsers();
 
 		try {
 			names = new ItemNameLookup(cxn2, datasetType);
@@ -218,10 +240,10 @@ public class UserUser implements Runnable {
 				// get 10 recommendation for the user
 				startTime = System.nanoTime();
 				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
-				//System.out.format("Recommendations for user %d:\n", user);
+				System.out.format("Recommendations for user %d:\n", user);
 				for (Result item : recs) {
-					//String name = names.getItemName(item.getId());
-					//System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
+					String name = names.getItemName(item.getId());
+					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
 				}
 				endTime = System.nanoTime();
 
@@ -231,7 +253,7 @@ public class UserUser implements Runnable {
 				time[i] = duration;
 				i++;
 				
-				System.out.print(".");
+				//System.out.print(".");
 				//limit the size for 1000
 				//if(i==999)
 				//	break;
@@ -242,9 +264,9 @@ public class UserUser implements Runnable {
 					System.out.println("Times Up");
 					break;
 					}
-				//System.out.println("--------------------------------------------");
-				//System.out.println("User " + user + " recommendition generated in " + duration + " ms");
-				//System.out.println("--------------------------------------------");
+				System.out.println("--------------------------------------------");
+				System.out.println("User " + user + " recommendition generated in " + duration + " ms");
+				System.out.println("--------------------------------------------");
 			}
 
 			long endThroughputTime = System.nanoTime();
@@ -288,6 +310,10 @@ public class UserUser implements Runnable {
 			
 		case 3:
 			name += "SVD_";
+			break;
+
+		case 4:
+			name += "SlopeOne_";
 			break;
 
 		default:
