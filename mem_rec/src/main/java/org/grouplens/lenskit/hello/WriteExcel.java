@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
+import com.sun.org.apache.bcel.internal.generic.SWAP;
+
 import jxl.CellView;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
@@ -29,7 +31,7 @@ public void setOutputFile(String inputFile) {
   this.inputFile = inputFile;
   }
 
-  public void write(long[] userId, long [] time) throws IOException, WriteException {
+  public void write(long[] userId, long [] time, int dataset, int database, int algorithm) throws IOException, WriteException {
     File file = new File(inputFile);
     WorkbookSettings wbSettings = new WorkbookSettings();
 
@@ -39,7 +41,7 @@ public void setOutputFile(String inputFile) {
     workbook.createSheet("Report", 0);
     WritableSheet excelSheet = workbook.getSheet(0);
     createLabel(excelSheet);
-    createContent(excelSheet, userId, time);
+    createContent(excelSheet, userId, time, dataset, database, algorithm);
 
     workbook.write();
     workbook.close();
@@ -69,12 +71,14 @@ public void setOutputFile(String inputFile) {
     // Write a few headers
     addCaption(sheet, 0, 0, "UserID");
     addCaption(sheet, 1, 0, "Run time");
-    
+    addCaption(sheet, 2, 0, "Dataset");
+    addCaption(sheet, 3, 0, "Database");
+    addCaption(sheet, 4, 0, "Algorithm");
 
   }
 
    
-  private void createContent(WritableSheet sheet,long[] userId, long [] time) throws WriteException,
+  private void createContent(WritableSheet sheet,long[] userId, long [] time, int dataset, int database, int algorithm) throws WriteException,
   RowsExceededException {
 // Write a few number
 for (int i = 0; i < userId.length; i++) {
@@ -89,10 +93,47 @@ buf.append("SUM(A2:A"+userId.length+")");
 Formula f = new Formula(0, userId.length, buf.toString());
 //sheet.addCell(f);
 buf = new StringBuffer();
-buf.append("SUM(B2:B"+userId.length+")");
+buf.append("AVERAGE(B2:B"+(userId.length+1)+")");
 f = new Formula(1, userId.length+1, buf.toString());
 sheet.addCell(f);
 
+
+if(algorithm==1)
+	addLabel(sheet, 4, 1, "Item");
+else
+	addLabel(sheet, 4, 1, "User");
+
+switch (database) {
+case 1:
+	addLabel(sheet, 3, 1, "Postgre");
+	break;
+
+case 2:
+	addLabel(sheet, 3, 1, "MonetDB");
+	break;
+
+case 3:
+	addLabel(sheet, 3, 1, "VoltDB");
+	break;
+
+default:
+	break;
+}
+
+switch (dataset) {
+case 0:
+	addLabel(sheet, 2, 1, "100k");
+	break;
+
+case 1:
+	addLabel(sheet, 2, 1, "1Mil");
+	break;
+case 2:
+	addLabel(sheet, 2, 1, "20mil");
+	break;
+default:
+	break;
+}
 // now a bit of text
 // for (int i = 12; i < 20; i++) {
   // First column

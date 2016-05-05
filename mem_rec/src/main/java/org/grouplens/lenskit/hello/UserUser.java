@@ -84,88 +84,104 @@ public class UserUser implements Runnable {
 	private List<Long> users;
 	private static Connection cxn;
 	private int datasetType;
+	private int databaseType;
+	private int algorithm;
+	private String algo;
 	private static Connection cxn2;
-	
+
 	public UserUser(String[] args) {
 		users = new ArrayList<Long>(args.length);
-		
+
 		config();
 	}
-	
+
 	private void config() {
-		// postgres connections
-		try {
-			//cxn = ConnectionManager.getConnectionPostGresql();
-			// cxn = ConnectionManager.getConnectionMonetDb();
-			 cxn = ConnectionManager.getConnectionVoltDB();
-			
-			
-			//cxn2 = ConnectionManager.getConnectionPostGresql();
-			// cxn2 = ConnectionManager.getConnectionMonetDb();
-			 cxn2 = ConnectionManager.getConnectionVoltDB();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		// 1 - PostGresql
+		// 2 - MonetDB
+		// 3 - VoltDB
+		this.databaseType = 2;
+
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 0;
+		this.datasetType = 1;
 
-	}
-
-	public void test()
-	{
-		UserIdLookup Ids = null;
-		
+		// 1 - item-item
+		// 2 - user-user
+		this.algorithm = 1;
+		this.algo = "etc/item-item.groovy";
+		// this.algo = "etc/user-User.groovy";
+		// postgres connections
 		try {
-			Connection cxn2 = ConnectionManager.getConnectionPostGresql();
-			Ids = new UserIdLookup(cxn2,datasetType);
+
+			switch (databaseType) {
+			case 1:
+				cxn = ConnectionManager.getConnectionPostGresql();
+				cxn2 = ConnectionManager.getConnectionPostGresql();
+				break;
+			case 2:
+				cxn = ConnectionManager.getConnectionMonetDb();
+				cxn2 = ConnectionManager.getConnectionMonetDb();
+				break;
+			case 3:
+				cxn = ConnectionManager.getConnectionVoltDB();
+				cxn2 = ConnectionManager.getConnectionVoltDB();
+				break;
+
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		
-		users = Ids.getUserIds();
-		
-		System.out.println("There are "+ users.size()+" users in this model,,");
-
-		
-		//testing
-		users.clear();
-		users.add((long) 5);
-		users.add((long) 72);
-		users.add((long) 20);
-		//for (Long long1 : users) {
-		//	System.out.println(long1);
-		//}
 	}
-	
-	
-	public void run() {
-		
-		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
 
-		
+	public void test() {
+		UserIdLookup Ids = null;
+
+		try {
+			// Connection cxn2 = ConnectionManager.getConnectionPostGresql();
+			Ids = new UserIdLookup(cxn2, datasetType);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		users = Ids.getUserIds();
+
+		System.out.println("There are " + users.size() + " users in this model,,");
+
+		// testing
+		//users.clear();
+		//users.add((long) 5);
+		//users.add((long) 72);
+		//users.add((long) 20);
+		// for (Long long1 : users) {
+		// System.out.println(long1);
+		// }
+	}
+
+	public void run() {
+
+		JDBCRatingDAO dao = new JDBCRatingDAO(this.cxn, new BasicStatementFactory_Postgresql(datasetType));
 
 		// EventDAO dao = TextEventDAO.create(inputFile,
 		// Formats.movieLensLatest());
 
 		ItemNameDAO names;
 		test();
-		
+
 		try {
 			names = new ItemNameLookup(cxn2, datasetType);
-		} catch ( SQLException e) {
+		} catch (SQLException e) {
 			throw new RuntimeException("cannot load names", e);
 		}
 
 		// Next: load the LensKit algorithm configuration
 		LenskitConfiguration config = null;
 		try {
-			config = ConfigHelpers.load(new File("etc/item-item.groovy"));
+			config = ConfigHelpers.load(new File(algo));
 		} catch (IOException e) {
 			throw new RuntimeException("could not load configuration", e);
 		}
@@ -175,11 +191,10 @@ public class UserUser implements Runnable {
 
 		LenskitRecommenderEngine engine = LenskitRecommenderEngine.build(config);
 		long endTime = System.nanoTime();
-		
 
-		long duration = (endTime - startTime) / 1000000; 
+		long duration = (endTime - startTime) / 1000000;
 
-		System.out.println("time to build model: "+ duration);
+		System.out.println("time to build model: " + duration);
 		// Finally, get the recommender and use it.
 		try (LenskitRecommender rec = engine.createRecommender()) {
 			// we want to recommend items
@@ -189,47 +204,89 @@ public class UserUser implements Runnable {
 			assert irec != null; // not null because we configured one
 
 			double sum = 0;
-			long [] userID = new long[users.size()];
-			long [] time = new long[users.size()];
-			int i=0;
+			long[] userID = new long[users.size()];
+			long[] time = new long[users.size()];
+			int i = 0;
 			// for users
 			for (long user : users) {
 				// get 10 recommendation for the user
 				startTime = System.nanoTime();
 				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
-				System.out.format("Recommendations for user %d:\n", user);
+				//System.out.format("Recommendations for user %d:\n", user);
 				for (Result item : recs) {
-					String name = names.getItemName(item.getId());
-					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
+					//String name = names.getItemName(item.getId());
+					//System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
 				}
 				endTime = System.nanoTime();
-				
 
-				duration = (endTime - startTime) / 1000000; 
-				sum+=duration;
-				userID[i]=user;
-				time[i]=duration;
+				duration = (endTime - startTime) / 1000000;
+				sum += duration;
+				userID[i] = user;
+				time[i] = duration;
 				i++;
-				System.out.println("--------------------------------------------");
-				System.out.println("User " + user + " recommendition generated in " + duration + " ms");
-				System.out.println("--------------------------------------------");
+				System.out.print(".");
+				//System.out.println("--------------------------------------------");
+				//System.out.println("User " + user + " recommendition generated in " + duration + " ms");
+				//System.out.println("--------------------------------------------");
 			}
-			
-			 WriteExcel test = new WriteExcel();
-			    test.setOutputFile("c:/temp/results.xls");
-			    test.write(userID,time);
-			    System.out
-			        .println("Please check the result file under c:/temp/results.xls ");
-			
+
+			WriteExcel test = new WriteExcel();
+
+			test.setOutputFile(filename());
+			test.write(userID, time, datasetType, databaseType, algorithm);
+			System.out.println("Please check the result file under results.xls ");
+
 			System.out.println("--------------------------------------------");
-			System.out.println("Avg User time to recommendition generated in " + sum/users.size() + " ms");
+			System.out.println("Avg User time to recommendition generated in " + sum / users.size() + " ms");
 			System.out.println("--------------------------------------------");
-		
-		}
-		catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-		
+
+	private String filename() {
+		String name = "results_";
+		if (algorithm == 1)
+			name += "Item_";
+		else
+			name += "User_";
+
+		switch (databaseType) {
+		case 1:
+			name += "Postgre_";
+			break;
+
+		case 2:
+			name += "MonetDB_";
+
+			break;
+
+		case 3:
+			name += "VoltDB_";
+			break;
+
+		default:
+			break;
+		}
+
+		switch (datasetType) {
+		case 0:
+			name += "100K_";
+			break;
+
+		case 1:
+			name += "1 Mil_";
+			break;
+		case 2:
+			name += "20 Mil_";
+			break;
+		default:
+			break;
+		}
+
+		name += ".xls";
+		return name;
+	}
 }
