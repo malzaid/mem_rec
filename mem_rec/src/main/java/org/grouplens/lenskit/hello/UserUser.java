@@ -105,13 +105,15 @@ public class UserUser implements Runnable {
 		// 0 - basic 100k
 		// 1 - 1 million
 		// 2 - 20 million
-		this.datasetType = 2;
+		this.datasetType = 0;
 
 		// 1 - item-item
 		// 2 - user-user
 		this.algorithm = 1;
-		this.algo = "etc/item-item.groovy";
+		//this.algo = "etc/item-item.groovy";
 		//this.algo = "etc/User-User.groovy";
+		this.algo = "etc/SVD.groovy";
+		
 		// postgres connections
 		try {
 
@@ -229,7 +231,7 @@ public class UserUser implements Runnable {
 				time[i] = duration;
 				i++;
 				
-				System.out.println(".");
+				System.out.print(".");
 				//limit the size for 1000
 				//if(i==999)
 				//	break;
