@@ -6,7 +6,7 @@ import org.lenskit.baseline.ItemMeanRatingItemScorer
 import org.lenskit.baseline.UserMeanBaseline
 import org.lenskit.baseline.UserMeanItemScorer
 import org.lenskit.knn.MinNeighbors
-import org.lenskit.knn.item.ItemItemScorer
+//import org.lenskit.knn.item.ItemItemScorer
 
 import org.grouplens.lenskit.transform.normalize.MeanCenteringVectorNormalizer
 import org.grouplens.lenskit.transform.normalize.VectorNormalizer

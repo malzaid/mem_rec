@@ -111,7 +111,7 @@ public class UserUser implements Runnable {
 		// 2 - user-user
 		// 3 - SVD
 		// 4 - SlopeOne
-		this.algorithm = 4;
+		this.algorithm = 2;
 		
 		switch (algorithm) {
 		case 1:
