@@ -100,7 +100,7 @@ public class UserUser implements Runnable {
 		// 1 - PostGresql
 		// 2 - MonetDB
 		// 3 - VoltDB
-		this.databaseType = 2;
+		this.databaseType = 3;
 
 		// 0 - basic 100k
 		// 1 - 1 million
@@ -111,7 +111,7 @@ public class UserUser implements Runnable {
 		// 2 - user-user
 		// 3 - SVD
 		// 4 - SlopeOne
-		this.algorithm = 2;
+		this.algorithm = 3;
 		
 		switch (algorithm) {
 		case 1:
@@ -238,10 +238,10 @@ public class UserUser implements Runnable {
 				// get 10 recommendation for the user
 				startTime = System.nanoTime();
 				ResultList recs = irec.recommendWithDetails(user, 10, null, null);
-				System.out.format("Recommendations for user %d:\n", user);
+				//System.out.format("Recommendations for user %d:\n", user);
 				for (Result item : recs) {
-					String name = names.getItemName(item.getId());
-					System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
+					//String name = names.getItemName(item.getId());
+					//System.out.format("\t%d (%s): %.2f\n", item.getId(), name, item.getScore());
 				}
 				endTime = System.nanoTime();
 
@@ -251,7 +251,7 @@ public class UserUser implements Runnable {
 				time[i] = duration;
 				i++;
 				
-				//System.out.print(".");
+				System.out.print(".");
 				//limit the size for 1000
 				//if(i==999)
 				//	break;
@@ -262,9 +262,9 @@ public class UserUser implements Runnable {
 					System.out.println("Times Up");
 					break;
 					}
-				System.out.println("--------------------------------------------");
-				System.out.println("User " + user + " recommendition generated in " + duration + " ms");
-				System.out.println("--------------------------------------------");
+				//System.out.println("--------------------------------------------");
+				//System.out.println("User " + user + " recommendition generated in " + duration + " ms");
+				//System.out.println("--------------------------------------------");
 			}
 
 			long endThroughputTime = System.nanoTime();
@@ -352,7 +352,7 @@ public class UserUser implements Runnable {
 			break;
 		}
 
-		name += "limited5min_Run2.xls";
+		name += "Limit5min.xls";
 		return name;
 	}
 }
